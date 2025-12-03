@@ -28,10 +28,27 @@ class Day1(adventday.AdventDay):
         return zeros
 
     def part_two(self):
-        name_ptr = 0
-        for instr in self.instructions:
-            if instr[0] == 'L':
-                name_ptr = (name_ptr - int(instr[1:])) % len(self.dragon_names)
-            elif instr[0] == 'R':
-                name_ptr = (name_ptr + int(instr[1:])) % len(self.dragon_names)
-        return self.dragon_names[name_ptr]
+        zeros = 0
+        current = 50
+        for val in self.input:
+            old_current = current
+            extra_clicks = val[1] // 100
+            if val[0] == 'L':
+                current -= val[1] % 100
+            elif val[0] == 'R':
+                current += val[1] % 100
+            if current >= 100:
+                current -= 100
+                if current != 0:
+                    extra_clicks += 1
+            if current < 0:
+                current += 100
+                if current != 0 and old_current != 0:
+                    extra_clicks += 1
+            if current == 0:
+                extra_clicks += 1
+            if self.args.verbose:
+                print(f'Got instruction {val}, new value is {current}, clicks {extra_clicks}, zeros now {zeros + extra_clicks}')
+            zeros += extra_clicks
+        return zeros
+

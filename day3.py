@@ -40,5 +40,27 @@ class Day3(adventday.AdventDay):
 
         return power
 
+    def next_level(self, joltage, position, level, value):
+        for highval in reversed(sorted(joltage.values.keys())):
+            poslist = [x for x in joltage.values[highval] if x > position]
+            if len(poslist) > 0:
+                # We can use this!
+                if level == 11:
+                    # We're done!
+                    return value * 10 + highval
+                else:
+                    newval = self.next_level(joltage, poslist[0], level+1, value*10+highval)
+                    if newval is not None:
+                        return newval
+        # Looks like we didn't find anything.
+        return None
+
     def part_two(self):
-        return 0
+        power = 0
+        for joltage in self.joltages:
+            this_power = self.next_level(joltage, -1, 0, 0)
+            if self.args.verbose:
+                print(f'Got power {this_power}')
+            power += this_power
+
+        return power

@@ -7,14 +7,14 @@ import os
 import random
 import hashlib
 
-import day1, day2, day3, day4 #, day5, day6, day7, day8, day9, day10, day11, day12
+import day1, day2, day3, day4, day5 #, day6, day7, day8, day9, day10, day11, day12
 
 daylist = {
     1: day1.Day1,
     2: day2.Day2,
     3: day3.Day3,
     4: day4.Day4,
-    #5: day5.Day5,
+    5: day5.Day5,
     #6: day6.Day6,
     #7: day7.Day7,
     #8: day8.Day8,

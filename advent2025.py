@@ -64,7 +64,7 @@ def main(args):
         lines = decrypted_data.decode('utf-8').splitlines()
     else:
         with open(args.input, 'r') as f:
-            lines = [x.strip() for x in f.readlines()]
+            lines = [x.rstrip() for x in f.readlines()]
 
     if args.day:
         day = args.day[0]

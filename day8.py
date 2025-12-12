@@ -12,7 +12,7 @@ class Day8(adventday.AdventDay):
         for line in self.lines:
             self.points.append([int(x) for x in line.strip().split(',')])
 
-    def part_one(self):
+    def process_points(self, is_part_two=False):
         self.distances = {}
         for i, point in enumerate(self.points):
             for j, otherpoint in enumerate(self.points[i+1:], start=i+1):
@@ -30,7 +30,6 @@ class Day8(adventday.AdventDay):
             if self.args.verbose:
                 print(f'Distance {distance} has {len(pairs)} pairs: {pairs}')
                 print(f'Groups before processing: {self.groups}')
-                groups2 = set([frozenset(x) for x in self.groups.values()])
                 print(f'Unique groups: {groups2}')
             for pair in pairs:
                 group1 = self.groups[pair[0]]
@@ -39,7 +38,7 @@ class Day8(adventday.AdventDay):
                     print(f'Processing pair #{num_pairs_used+1}: {pair}, groups {group1} and {group2}')
                 if group1 is group2:
                     num_pairs_used += 1
-                    if num_pairs_used >= self.num_closest:
+                    if (not is_part_two) and num_pairs_used >= self.num_closest:
                         break
                     continue
                 # Merge groups.
@@ -47,14 +46,26 @@ class Day8(adventday.AdventDay):
                 for member in group2:
                     self.groups[member] = group1
                 num_pairs_used += 1
-                if num_pairs_used >= self.num_closest:
+                if (not is_part_two) and num_pairs_used >= self.num_closest:
                     break
-            if num_pairs_used >= self.num_closest:
+                groups2 = set([frozenset(x) for x in self.groups.values()])
+                if is_part_two and len(groups2) == 1:
+                    product = self.points[pair[0]][0] * self.points[pair[1]][0]
+                    break
+            if (not is_part_two) and num_pairs_used >= self.num_closest:
+                break
+            if is_part_two and len(groups2) == 1:
                 break
 
-        biggest_groups = sorted(len(x) for x in set([frozenset(x) for x in self.groups.values()]))  
+        if is_part_two:
+            return product
+        else:
+            biggest_groups = sorted(len(x) for x in set([frozenset(x) for x in self.groups.values()]))  
+            return biggest_groups[-1] * biggest_groups[-2] * biggest_groups[-3]
 
-        return biggest_groups[-1] * biggest_groups[-2] * biggest_groups[-3]
+    def part_one(self):
+        return self.process_points(is_part_two=False)
 
     def part_two(self):
-        return 0
+        return self.process_points(is_part_two=True)
+
